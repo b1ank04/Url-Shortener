@@ -1,31 +1,27 @@
 package com.blank.plugins
 
+import com.blank.service.UrlShorteningService
 import io.github.smiley4.ktorswaggerui.SwaggerUI
 import io.ktor.server.application.*
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
+import io.ktor.server.plugins.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.koin.ktor.ext.inject
 
 fun Application.configureRouting() {
-    install(SwaggerUI) {
-        swagger {
-            swaggerUrl = "swagger-ui"
-            forwardRoot = true
-        }
-        info {
-            title = "Example API"
-            version = "latest"
-            description = "Example API for testing and demonstration purposes."
-        }
-        server {
-            url = "http://localhost:8080"
-            description = "Development Server"
-        }
-    }
+    
+    val urlShorteningService by inject<UrlShorteningService>()
     routing {
-        get("/") {
-            call.respondText("Hello World!")
+        post("/") {
+            val link = call.parameters["original"]?: throw IllegalArgumentException("Empty link provided.")
+            call.respondText(urlShorteningService.generate(link))
+        }
+        
+        get("/{link}") {
+            val link = call.parameters["link"]?: throw IllegalArgumentException("Empty link provided.")
+            urlShorteningService.retrieve(link)?.let { call.respondRedirect(it) }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.blank.plugins
 
+import com.blank.redis.impl.UrlShorteningRepository
 import com.blank.service.UrlShorteningService
 import io.ktor.server.application.*
 import io.lettuce.core.ExperimentalLettuceCoroutinesApi
@@ -21,7 +22,9 @@ fun Application.configureFrameworks() {
                 
                 single { get<RedisClient>().connect().coroutines() }
                 
-                single { UrlShorteningService(get<RedisCoroutinesCommands<String, String>>()) }
+                single { UrlShorteningRepository(get<RedisCoroutinesCommands<String, String>>())}
+                
+                single { UrlShorteningService(get<UrlShorteningRepository>()) }
                 
             }
         )

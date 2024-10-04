@@ -1,36 +1,27 @@
 package com.blank.service
 
-import io.lettuce.core.ExperimentalLettuceCoroutinesApi
-import io.lettuce.core.api.coroutines.RedisCoroutinesCommands
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import com.blank.redis.RedisRepository
 import java.security.MessageDigest
 import java.time.Instant
 import java.util.*
 
-
-@OptIn(ExperimentalLettuceCoroutinesApi::class)
-class UrlShorteningService(private val redisRepository: RedisCoroutinesCommands<String, String>) {
+class UrlShorteningService(private val redisRepository: RedisRepository) {
 
 
     suspend fun generate(url: String): String {
-        val hashed: String = generateUniqueShortUrl(url)
-        runBlocking {
-            redisRepository.set(hashed, url)
-        }
+        val hashed = generateUniqueShortUrl(url)
+        redisRepository.set(hashed, url)
         return hashed
     }
-    fun retrieve(hashed: String): String? {
-        return runBlocking {
-            redisRepository.get(hashed)
-        }
+    
+    suspend fun retrieve(hashed: String): String? {
+        return redisRepository.get(hashed)
     }
     
     private suspend fun generateUniqueShortUrl(url: String): String {
         var hashed = hash(url)
         var attempts = 0
-        while (redisContains(url) && attempts <= 5) {
+        while (redisRepository.exists(url) && attempts <= 5) {
             hashed = hash(url + UUID.randomUUID().toString())
             attempts++
         }
@@ -49,9 +40,4 @@ class UrlShorteningService(private val redisRepository: RedisCoroutinesCommands<
         return Base64.getUrlEncoder().withoutPadding().encodeToString(digest).substring(0, 8)
     }
     
-    private suspend fun redisContains(hashed: String): Boolean {
-        return withContext(Dispatchers.IO) {
-            redisRepository.exists(hashed)
-        }!! > 0
-    }
 }

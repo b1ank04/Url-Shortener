@@ -10,7 +10,8 @@ paths:
   /v1/shorten:
     post:
       summary: Shorten a URL
-      description: Accepts a URL and returns a shortened version.
+      description: "Accepts a URL and returns a shortened version. 
+      Provide the expiration date and time if required or do not specify the `expireDate` parameter in body."
       requestBody:
         required: true
         content:
@@ -18,11 +19,11 @@ paths:
             schema:
               type: object
               properties:
-                url:
+                originalUrl:
                   type: string
                   description: The URL that you want to shorten.
                   example: "https://example.com"
-                expiration:
+                expireDate:
                   type: string
                   format: date-time
                   description: The expiration date of the shortened URL in ISO format (yyyy-MM-dd'T'HH:mm:ss).
@@ -45,28 +46,3 @@ paths:
                   message:
                     type: string
                     example: "Wrong request body."
-
-  /{link}:
-    get:
-      summary: Retrieve the original URL
-      description: Given a shortened URL link, retrieve the original URL.
-      parameters:
-        - name: link
-          in: path
-          required: true
-          description: The shortened link identifier.
-          schema:
-            type: string
-      responses:
-        '302':
-          description: Redirects to the original URL.
-        '400':
-          description: Invalid link provided.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Empty link provided."

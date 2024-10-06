@@ -92,11 +92,9 @@ class UrlShorteningServiceTest {
         val hash = "abcdefgh"
         val originalUrl = "https://example.com"
         coEvery { redisRepository.get(hash) } returns originalUrl
-
-        // Act
+        
         val result = urlShorteningService.retrieve(hash)
-
-        // Assert
+        
         assertEquals(originalUrl, result)
     }
 

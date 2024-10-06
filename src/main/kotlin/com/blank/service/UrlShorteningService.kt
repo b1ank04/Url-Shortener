@@ -1,21 +1,29 @@
 package com.blank.service
 
-import com.blank.redis.RedisRepository
+import com.blank.model.ShortenRequest
+import com.blank.repository.RedisRepository
 import java.security.MessageDigest
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class UrlShorteningService(private val redisRepository: RedisRepository) {
-
-
-    suspend fun generate(url: String): String {
-        val hashed = generateUniqueShortUrl(url)
-        redisRepository.set(hashed, url)
+    
+    suspend fun generate(request: ShortenRequest): String {
+        val originalUrl = request.originalUrl?: throw IllegalArgumentException("Empty url provided.")
+        val hashed = generateUniqueShortUrl(originalUrl)
+        if (request.expireDate == null) {
+            redisRepository.set(hashed, originalUrl)
+        } else {
+            redisRepository.setExpired(hashed, originalUrl, parseLocalDateTime(request.expireDate))
+        }
         return hashed
     }
     
-    suspend fun retrieve(hashed: String): String? {
-        return redisRepository.get(hashed)
+    suspend fun retrieve(hashed: String): String {
+        val originalUrl =  redisRepository.get(hashed)
+        return originalUrl ?: throw NoSuchElementException("No resource found for hashed value: $hashed")
     }
     
     private suspend fun generateUniqueShortUrl(url: String): String {
@@ -38,6 +46,14 @@ class UrlShorteningService(private val redisRepository: RedisRepository) {
         val uniqueUrl = "$input|$timestamp"
         val digest =  MessageDigest.getInstance("SHA-256").digest(uniqueUrl.toByteArray())
         return Base64.getUrlEncoder().withoutPadding().encodeToString(digest).substring(0, 8)
+    }
+    
+    private fun parseLocalDateTime(input: String): LocalDateTime {
+        try { 
+            return LocalDateTime.parse(input, DateTimeFormatter.ISO_DATE_TIME)
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Wrong dateTime format provided.")
+        }
     }
     
 }

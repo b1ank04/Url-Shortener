@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  redis:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: '512M'
+        reservations:
+          cpus: '0.25'
+          memory: '128M'
+    image: redis:7.4
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data                          # Volume for data persistence
+      - ./redis.conf:/usr/local/etc/redis/redis.conf  # Mount custom Redis config
+    command: redis-server /usr/local/etc/redis/redis.conf  # Start Redis with custom config
+
+  url-shortener:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: '512M'
+        reservations:
+          cpus: '0.25'
+          memory: '256M'
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - PORT=8080
+      - DOCUMENTATION_PATH=/app/documentation.yaml
+    depends_on:
+      - redis
+
+volumes:
+  redis_data:                                     # Declare the volume

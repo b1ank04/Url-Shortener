@@ -1,5 +1,6 @@
 package com.blank
 
+import com.blank.exceptions.exceptionHandler
 import com.blank.plugins.*
 import io.ktor.server.application.*
 
@@ -8,9 +9,8 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
-    configureHTTP()
-    configureMonitoring()
     configureSerialization()
     configureFrameworks()
     configureRouting()
+    exceptionHandler()
 }

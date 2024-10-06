@@ -13,7 +13,14 @@
         <kotlin_version>2.0.20</kotlin_version>
         <logback_version>1.4.14</logback_version>
         <slf4j_version>2.0.9</slf4j_version>
-
+        <ktor.server.config.yaml_version>2.3.12</ktor.server.config.yaml_version>
+        <lettuce_version>6.4.0.RELEASE</lettuce_version>
+        <swagger.ui_version>2.9.0</swagger.ui_version>
+        <kotlinx.coroutines.debug_version>1.6.4</kotlinx.coroutines.debug_version>
+        <kotlinx.coroutines.reactive_version>1.9.0</kotlinx.coroutines.reactive_version>
+        <mockk_version>1.12.4</mockk_version>
+        <junit.jupiter.api_version>5.11.2</junit.jupiter.api_version>
+        
         <koin_version>3.5.6</koin_version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
@@ -31,16 +38,11 @@
         <dependency>
             <groupId>io.lettuce</groupId>
             <artifactId>lettuce-core</artifactId>
-            <version>6.4.0.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.smiley4</groupId>
-            <artifactId>ktor-swagger-ui</artifactId>
-            <version>2.9.0</version>
+            <version>${lettuce_version}</version>
         </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-call-logging-jvm</artifactId>
+            <artifactId>ktor-server-swagger-jvm</artifactId>
             <version>${ktor_version}</version>
         </dependency>
         <dependency>
@@ -80,11 +82,6 @@
         </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-config-yaml-jvm</artifactId>
-            <version>2.3.12</version>
-        </dependency>
-        <dependency>
-            <groupId>io.ktor</groupId>
             <artifactId>ktor-server-test-host-jvm</artifactId>
             <version>${ktor_version}</version>
             <scope>test</scope>
@@ -95,11 +92,37 @@
             <version>${kotlin_version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.api_version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.mockk/mockk -->
+        <dependency>
+            <groupId>io.mockk</groupId>
+            <artifactId>mockk</artifactId>
+            <version>${mockk_version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlinx</groupId>
             <artifactId>kotlinx-coroutines-debug</artifactId>
-            <version>1.6.4</version>
+            <version>${kotlinx.coroutines.debug_version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-status-pages-jvm</artifactId>
+            <version>${ktor_version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-reactive -->
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-coroutines-reactive</artifactId>
+            <version>${kotlinx.coroutines.reactive_version}</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
     <build>

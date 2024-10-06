@@ -17,6 +17,9 @@
         <lettuce_version>6.4.0.RELEASE</lettuce_version>
         <swagger.ui_version>2.9.0</swagger.ui_version>
         <kotlinx.coroutines.debug_version>1.6.4</kotlinx.coroutines.debug_version>
+        <kotlinx.coroutines.reactive_version>1.9.0</kotlinx.coroutines.reactive_version>
+        <mockk_version>1.12.4</mockk_version>
+        <junit.jupiter.api_version>5.11.2</junit.jupiter.api_version>
         
         <koin_version>3.5.6</koin_version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -98,17 +101,16 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.11.2</version>
+            <version>${junit.jupiter.api_version}</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/io.mockk/mockk -->
         <dependency>
             <groupId>io.mockk</groupId>
             <artifactId>mockk</artifactId>
-            <version>1.13.12</version>
+            <version>${mockk_version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.jetbrains.kotlinx</groupId>
             <artifactId>kotlinx-coroutines-debug</artifactId>
@@ -124,7 +126,7 @@
         <dependency>
             <groupId>org.jetbrains.kotlinx</groupId>
             <artifactId>kotlinx-coroutines-reactive</artifactId>
-            <version>1.9.0</version>
+            <version>${kotlinx.coroutines.reactive_version}</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>

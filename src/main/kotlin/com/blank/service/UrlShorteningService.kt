@@ -2,10 +2,9 @@ package com.blank.service
 
 import com.blank.model.ShortenRequest
 import com.blank.repository.RedisRepository
+import com.blank.utils.parseLocalDateTime
 import java.security.MessageDigest
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class UrlShorteningService(private val redisRepository: RedisRepository) {
@@ -46,14 +45,6 @@ class UrlShorteningService(private val redisRepository: RedisRepository) {
         val uniqueUrl = "$input|$timestamp"
         val digest =  MessageDigest.getInstance("SHA-256").digest(uniqueUrl.toByteArray())
         return Base64.getUrlEncoder().withoutPadding().encodeToString(digest).substring(0, 8)
-    }
-    
-    private fun parseLocalDateTime(input: String): LocalDateTime {
-        try { 
-            return LocalDateTime.parse(input, DateTimeFormatter.ISO_DATE_TIME)
-        } catch (e: Exception) {
-            throw IllegalArgumentException("Wrong dateTime format provided.")
-        }
     }
     
 }

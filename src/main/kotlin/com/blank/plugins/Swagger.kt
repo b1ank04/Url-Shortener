@@ -6,6 +6,7 @@ import io.ktor.server.routing.*
 
 fun Application.swagger() {
     routing {
-        swaggerUI(path = "swagger", swaggerFile = "src/main/resources/documentation.yaml")
+        val documentationPath = System.getenv("DOCUMENTATION_PATH") ?: "src/main/resources/documentation.yaml"
+        swaggerUI(path = "swagger", swaggerFile = documentationPath)
     }
 }
